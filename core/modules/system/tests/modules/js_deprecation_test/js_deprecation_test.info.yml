@@ -1,0 +1,10 @@
+name: 'JS Deprecation test'
+description: 'Provides deprecated code that can be used for tests'
+type: module
+package: Testing
+# version: VERSION
+
+# Information added by Drupal.org packaging script on 2022-07-22
+version: '9.5.x-dev'
+project: 'drupal'
+datestamp: 1658479357

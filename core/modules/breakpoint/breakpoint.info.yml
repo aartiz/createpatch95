@@ -1,0 +1,10 @@
+name: Breakpoint
+type: module
+description: 'Manages breakpoints and breakpoint groups for responsive designs.'
+package: Core
+# version: VERSION
+
+# Information added by Drupal.org packaging script on 2022-07-22
+version: '9.5.x-dev'
+project: 'drupal'
+datestamp: 1658479358

@@ -1,0 +1,12 @@
+name: Path alias
+type: module
+description: 'Provides the API allowing to rename URLs.'
+package: Core
+# version: VERSION
+required: true
+hidden: true
+
+# Information added by Drupal.org packaging script on 2022-07-22
+version: '9.5.x-dev'
+project: 'drupal'
+datestamp: 1658479357

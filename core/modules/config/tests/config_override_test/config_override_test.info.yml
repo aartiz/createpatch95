@@ -1,0 +1,12 @@
+name: 'Configuration override test'
+type: module
+package: Testing
+# version: VERSION
+dependencies:
+  - drupal:block
+  - drupal:block_content
+
+# Information added by Drupal.org packaging script on 2022-07-22
+version: '9.5.x-dev'
+project: 'drupal'
+datestamp: 1658479358

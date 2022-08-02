@@ -1,0 +1,10 @@
+name: CSRF race test
+type: module
+description: 'Check that CSRF token is generated once.'
+package: Testing
+# version: VERSION
+
+# Information added by Drupal.org packaging script on 2022-07-22
+version: '9.5.x-dev'
+project: 'drupal'
+datestamp: 1658479357

@@ -1,0 +1,12 @@
+name: 'RESTful Web Services'
+type: module
+description: 'Exposes entities and other resources as RESTful web API'
+package: Web services
+# version: VERSION
+dependencies:
+  - drupal:serialization
+
+# Information added by Drupal.org packaging script on 2022-07-22
+version: '9.5.x-dev'
+project: 'drupal'
+datestamp: 1658479357
