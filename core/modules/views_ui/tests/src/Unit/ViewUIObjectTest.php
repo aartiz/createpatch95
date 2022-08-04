@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\views_ui\Unit;
 
-use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\TempStore\Lock;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Entity\View;
@@ -17,35 +16,12 @@ class ViewUIObjectTest extends UnitTestCase {
 
   /**
    * Tests entity method decoration.
+   *
+   * @dataProvider providerEntityDecoration
    */
-  public function testEntityDecoration() {
-    $method_args = [];
-    $method_args['setOriginalId'] = [12];
-    $method_args['setStatus'] = [TRUE];
-    $method_args['enforceIsNew'] = [FALSE];
-    $method_args['label'] = [LanguageInterface::LANGCODE_NOT_SPECIFIED];
-
-    $reflection = new \ReflectionClass('Drupal\Core\Config\Entity\ConfigEntityInterface');
-    $interface_methods = [];
-    foreach ($reflection->getMethods() as $reflection_method) {
-      $interface_methods[] = $reflection_method->getName();
-
-      // EntityInterface::isNew() is missing from the list of methods, because it
-      // calls id(), which breaks the ->expect($this->once()) call. Call it later.
-      // EntityInterface::isSyncing() is only called during syncing process.
-      // EntityInterface::isUninstalling() is only called during uninstallation
-      // process. EntityInterface::getConfigDependencyName() and
-      // ConfigEntityInterface::calculateDependencies() are only used for
-      // dependency management.
-      if (!in_array($reflection_method->getName(), ['isNew', 'isSyncing', 'isUninstalling', 'getConfigDependencyKey', 'getConfigDependencyName', 'calculateDependencies'])) {
-        if (count($reflection_method->getParameters()) == 0) {
-          $method_args[$reflection_method->getName()] = [];
-        }
-      }
-    }
-
+  public function testEntityDecoration($method, $arguments) {
     $storage = $this->getMockBuilder('Drupal\views\Entity\View')
-      ->onlyMethods($interface_methods)
+      ->onlyMethods([$method])
       ->setConstructorArgs([[], 'view'])
       ->getMock();
     $executable = $this->getMockBuilder('Drupal\views\ViewExecutable')
@@ -56,18 +32,34 @@ class ViewUIObjectTest extends UnitTestCase {
 
     $view_ui = new ViewUI($storage);
 
-    foreach ($method_args as $method => $args) {
-      $method_mock = $storage->expects($this->once())
-        ->method($method);
-      foreach ($args as $arg) {
-        $method_mock->with($this->equalTo($arg));
-      }
-      call_user_func_array([$view_ui, $method], $args);
+    $method_mock = $storage->expects($this->once())->method($method);
+    foreach ($arguments as $argument) {
+      $method_mock->with($this->equalTo($argument));
     }
+    call_user_func_array([$view_ui, $method], $arguments);
+  }
 
-    $storage->expects($this->once())
-      ->method('isNew');
-    $view_ui->isNew();
+  /**
+   * Data provider for ::testEntityDecoration.
+   */
+  public function providerEntityDecoration() {
+    $methods = [
+      ['setOriginalId', [12]],
+      ['setStatus', [TRUE]],
+      ['enforceIsNew', [FALSE]],
+      ['setSyncing', [TRUE]],
+      ['setUninstalling', [TRUE]],
+    ];
+
+    $reflection = new \ReflectionClass('Drupal\Core\Config\Entity\ConfigEntityInterface');
+    $interface_methods = [];
+    foreach ($reflection->getMethods() as $reflection_method) {
+      $interface_methods[] = $reflection_method->getName();
+      if (count($reflection_method->getParameters()) == 0) {
+        $methods[] = [$reflection_method->getName(), []];
+      }
+    }
+    return $methods;
   }
 
   /**

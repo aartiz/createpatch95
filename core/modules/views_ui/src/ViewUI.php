@@ -121,21 +121,6 @@ class ViewUI implements ViewEntityInterface {
   ];
 
   /**
-   * Whether the config is being created, updated or deleted through the
-   * import process.
-   *
-   * @var bool
-   */
-  private $isSyncing = FALSE;
-
-  /**
-   * Whether the config is being deleted through the uninstall process.
-   *
-   * @var bool
-   */
-  private $isUninstalling = FALSE;
-
-  /**
    * Constructs a View UI object.
    *
    * @param \Drupal\views\ViewEntityInterface $storage
@@ -180,28 +165,30 @@ class ViewUI implements ViewEntityInterface {
    * {@inheritdoc}
    */
   public function setSyncing($syncing) {
-    $this->isSyncing = $syncing;
+    $this->storage->setSyncing($syncing);
+    return $this;
   }
 
   /**
    * {@inheritdoc}
    */
   public function setUninstalling($isUninstalling) {
-    $this->isUninstalling = $isUninstalling;
+    $this->storage->setUninstalling($isUninstalling);
+    return $this;
   }
 
   /**
    * {@inheritdoc}
    */
   public function isSyncing() {
-    return $this->isSyncing;
+    return $this->storage->isSyncing();
   }
 
   /**
    * {@inheritdoc}
    */
   public function isUninstalling() {
-    return $this->isUninstalling;
+    return $this->storage->isUninstalling();
   }
 
   /**
